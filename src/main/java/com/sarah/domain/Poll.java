@@ -22,8 +22,9 @@ public class Poll {
     @Size(min=2, max = 6)
     private Set<Option> options;
 
-    public Poll(String question, Set<Option> options){
+    public Poll(Long id, String question, Set<Option> options){
         super();
+        this.id = id;
         this.question = question;
         this.options = options;
     }

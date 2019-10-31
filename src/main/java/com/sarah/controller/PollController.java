@@ -27,7 +27,7 @@ public class PollController {
 
     @RequestMapping(value="/polls", method=RequestMethod.POST)
     public ResponseEntity<?> createPoll(@Valid @RequestBody Poll poll) {
-            poll = pollRepository.save(poll);
+        poll = pollRepository.save(poll);
 
         // Set the location header for the newly created resource
         HttpHeaders responseHeaders = new HttpHeaders();
@@ -50,9 +50,9 @@ public class PollController {
 
     @RequestMapping(value="/polls/{pollId}", method=RequestMethod.PUT)
     public ResponseEntity<?> updatePoll(@RequestBody Poll poll, @PathVariable Long pollId) {
-        // Save the entity
-        verifyPoll(pollId);
-        pollRepository.save(poll);
+        Poll poll2 = new Poll(pollId, poll.getQuestion(), poll.getOptions());
+        pollRepository.deleteById(pollId);
+        pollRepository.save(poll2);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -63,7 +63,7 @@ public class PollController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    void verifyPoll(long pollId){
+    private void verifyPoll(long pollId){
         Optional<Poll> p = pollRepository.findById(pollId);
         if(!p.isPresent()) {
             throw new ResourceNotFoundException("Poll with id " + pollId + " not found");
